@@ -19,15 +19,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Maven Nexus Release
-  # You may pin to the exact commit or the version.
-  # uses: monkeyWie/maven-nexus-release@194ac626668559a29c912733eac448053a3f5f9c
-        uses: monkeyWie/maven-nexus-release@v1.0.0
+      - name: Nexus Repo Publish
+        uses: sonatype-nexus-community/nexus-repo-github-action@master
         with:
-        # Maven server repository username
-          maven-repo-server-username: admin
-          # Maven server repository password
-          maven-repo-server-password: ${{ secrets.NEXUS_PASSWORD }}
+          serverUrl: http://localhost:8081/repository/devops/
+          username: admin
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          format: maven2
+          repository: maven-releases
+          coordinates: groupId=com.example artifactId=app version=1.0.0
+          assets: extension=jar
+        #filename: ./target/app-1.0.0.jar
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
