@@ -19,6 +19,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Nexus Repo Publish
+        uses: sonatype-nexus-community/nexus-repo-github-action@master
+        with:
+          serverUrl: http://localhost:8081/repository/devops/
+          username: admin
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          format: maven2
+          repository: devops
+          coordinates: groupId=com.example artifactId=demo version=1.0.0
+          assets: extension=jar
+          filename: ./target/demo-1.0.0.jar
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
