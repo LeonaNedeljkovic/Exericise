@@ -28,7 +28,7 @@ jobs:
             minor_pattern: "(MINOR)"
             format: "${major}.${minor}.${patch}"
             short_tags: false
-            bump_each_commit: true
+            bump_each_commit: false
         
 #         - name: Bump version and push tag
 #           id: tag_version
