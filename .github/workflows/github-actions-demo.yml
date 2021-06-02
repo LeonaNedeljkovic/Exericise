@@ -8,48 +8,34 @@ defaults:
     working-directory: demo
 
 jobs:
-  pipeline_job:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-          
-      - name: Publish - GitHub Packages
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11.0.4
-      - name: Publish artifact on GitHub Packages
-        run: mvn -B clean deploy -DskipTests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v5.5
-        with:
+    ci_trial:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        - name: Set up JDK 11
+          uses: actions/setup-java@v1
+          with:
+            java-version: 11
+        
+        - name: Bump version and push tag
+          id: tag_version
+          uses: mathieudutour/github-tag-action@v5.5
+          with:
             append_to_pre_release_tag: "dev"
             default_bump: patch
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            
-      - name: Checkout code
-        uses: actions/checkout@master
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          release_name: Prerelease ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-          prerelease: true
+
+        - name: Create a GitHub prerelease
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ steps.tag_version.outputs.new_tag }}
+            release_name: Prerelease ${{ steps.tag_version.outputs.new_tag }}
+            body: ${{ steps.tag_version.outputs.changelog }}
+            prerelease: true
 #   sonar:
 #     name: Test - SonarCloud Scan
 #     runs-on: ubuntu-18.04
