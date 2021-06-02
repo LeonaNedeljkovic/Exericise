@@ -32,9 +32,10 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            tag_name: ${{ steps.tag_version.outputs.new_tag }}
-            release_name: Prerelease ${{ steps.tag_version.outputs.new_tag }}
-            body: ${{ steps.tag_version.outputs.changelog }}
+            tag_name: 1.0.0
+            release_name: Prerelease 1.0.0
+#             tag_name: ${{ steps.tag_version.outputs.new_tag }}
+#             release_name: Prerelease ${{ steps.tag_version.outputs.new_tag }}
             prerelease: true
             
 #         - name: Publish - GitHub Packages
